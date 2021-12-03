@@ -169,7 +169,7 @@ apt -y install realmd libnss-sss libpam-sss sssd sssd-tools adcli samba-common-b
 #realm discover g05-dc01.groep5.local
 
 # Login by the DC.
-echo "$password_admin" | realm join -u Administrator g05-dc01.groep5.local
+echo "$password_admin" | realm join -U Administrator g05-dc01.groep5.local
 
 # Check if user wants static ip-address. If so, the static ip address wil be set.
 set_static_ip () {
