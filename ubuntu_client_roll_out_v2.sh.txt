@@ -203,7 +203,7 @@ pam-auth-update --enable mkhomedir
 #apt install gconf2 -y
 
 # Remove update-manager
-apt-get remove update-manager
+apt-get remove update-manager -y
 
 # Stop popup from updatemanager
 #gconftool -s --type bool /apps/update-notifier/auto_launch false
