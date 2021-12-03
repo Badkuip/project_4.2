@@ -199,6 +199,9 @@ sed -i 's@#FallbackNTP=ntp.ubuntu.com@FallbackNTP=ntp.ubuntu.com@g' /etc/systemd
 # Make Home directory
 pam-auth-update --enable mkhomedir
 
+# Stop popup from updatemanager
+gconftool -s --type bool /apps/update-notifier/auto_launch false
+
 # Add client to authentication server.
 #domainjoin-cli join domain_name domain_administrative_user
 
