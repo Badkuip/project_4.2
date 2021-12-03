@@ -199,6 +199,9 @@ sed -i 's@#FallbackNTP=ntp.ubuntu.com@FallbackNTP=ntp.ubuntu.com@g' /etc/systemd
 # Make Home directory
 pam-auth-update --enable mkhomedir
 
+# Install gconftool
+apt install gconf2
+
 # Stop popup from updatemanager
 gconftool -s --type bool /apps/update-notifier/auto_launch false
 
