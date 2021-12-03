@@ -191,6 +191,14 @@ set_static_ip
 # Apply network changes.
 netplan apply
 
+
+# Set time sync.
+sed -i 's@#NTP=@NTP=g05-dc01.groep5.local@g' /etc/systemd/timesyncd.conf
+sed -i 's@#FallbackNTP=ntp.ubuntu.com@FallbackNTP=ntp.ubuntu.com@g' /etc/systemd/timesyncd.conf
+
+# Make Home directory
+pam-auth-update --enable mkhomedir
+
 # Add client to authentication server.
 #domainjoin-cli join domain_name domain_administrative_user
 
