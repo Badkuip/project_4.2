@@ -11,11 +11,11 @@ systemctl enable nfs-server.service
 
 ethernetinterface=$(ip -o link show | awk '{print $2,$9}' | grep -P '(ens|eth)[0-9]{1,3}: UP' | awk 'FNR <= 1' | awk -F: '{print $1}')
 
-sed -i -r 's@BOOTPROTO=dhcp@BOOTPROTO=none@g' /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
-echo 'IPADDR=$ip_address' >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
-echo 'PREFIX=$subnetmask' >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
-echo 'GATEWAY=$gateway' >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
-echo 'DNS1=$dns_server' >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
+sed -i -r "s@BOOTPROTO=dhcp@BOOTPROTO=none@g" /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
+echo "IPADDR=$ip_address" >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
+echo "PREFIX=$subnetmask" >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
+echo "GATEWAY=$gateway" >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
+echo "DNS1=$dns_server" >> /etc/sysconfig/network-scripts/ifcfg-$ethernetinterface
 
 mkdir /srv/ldap-home
 mkdir /srv/nfs-share
