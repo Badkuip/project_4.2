@@ -196,8 +196,34 @@ netplan apply
 sed -i 's@#NTP=@NTP=g05-dc01.groep5.local@g' /etc/systemd/timesyncd.conf
 sed -i 's@#FallbackNTP=ntp.ubuntu.com@FallbackNTP=ntp.ubuntu.com@g' /etc/systemd/timesyncd.conf
 
-# Make Home directory
+# Make home directory for nieuw users.
 pam-auth-update --enable mkhomedir
+
+# Disables login list.
+sed -i 's@# disable-user-list=true@disable-user-list=true@g' /etc/gdm3/greeter.dconf-defaults
+
+# Makes shared folder mounting location.
+mkdir /mnt/nfs-share
+
+# Install pam-mount.
+apt-get intstall libpam-mount -y
+
+# Install hxtools.
+apt-get install hxtools -y
+
+# Install nfs-common.
+apt-get install nfs-common -y
+
+# Configure pam-mount to mount nfs homefolders.
+sed -i '16s@@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/%(DOMAIN_USER)" mountpoint="home/%(DOMAIN_USER)" options="soft" />'@g /etc/security/pam_mount.conf.xml
+
+# Permanent mount shared folder.
+echo '10.15.1.13:/srv/nfs-share /mnt/nfs-share nfs defaults 0 0'  >> /etc/fstab
+
+# Change home folder privalages.
+sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
+sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
+
 
 # Install gconftool
 #apt install gconf2 -y
