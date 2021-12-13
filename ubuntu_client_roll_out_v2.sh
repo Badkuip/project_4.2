@@ -215,8 +215,9 @@ apt-get install hxtools -y
 apt-get install nfs-common -y
 
 # Configure pam-mount to mount nfs homefolders.
-sed -i '16 s@^$@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/%(DOMAIN_USER)" mountpoint="home/%(DOMAIN_USER)" options="soft" />'@g /etc/security/pam_mount.conf.xml
-
+sed -i '16 s@^$@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/%(DOMAIN_USER)" mountpoint="home/%(DOMAIN_USER)" options="soft" />@g' /etc/security/pam_mount.conf.xml
+sed -i 's@<logout wait="0" hup="no" term="no" kill="no" />@<logout wait="0" hup="yes" term="yes" kill="yes" />@g' /etc/security/pam_mount.conf.xml
+sed -i 's@^session optional\t\t\t pam_mkhomedir.so@session optional\t\t\t pam_mkhomedir.so\tumask=077@g' /etc/pam.d/common-session
 # Permanent mount shared folder.
 echo '10.15.1.13:/srv/nfs-share /mnt/nfs-share nfs defaults 0 0'  >> /etc/fstab
 
