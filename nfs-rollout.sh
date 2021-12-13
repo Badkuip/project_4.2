@@ -21,6 +21,8 @@ mkdir /srv/ldap-home
 mkdir /srv/nfs-share
 chown nobody:nobody ldap-home
 chown nobody:nobody nfs-share
+chmod 777 ldap-home
+chmod 777 nfs-share
 
 # echo /srv/ldap-home 10.15.1.0/24(rwx, sync, soft)
 echo '/srv/ladp-home 10.15.1.0/24(rw,no_root_squash,no_subtree_check,no_wdelay,sync)' >> /etc/exports
