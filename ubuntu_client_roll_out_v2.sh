@@ -206,7 +206,7 @@ sed -i 's@# disable-user-list=true@disable-user-list=true@g' /etc/gdm3/greeter.d
 mkdir /mnt/nfs-share
 
 # Install pam-mount.
-apt-get intstall libpam-mount -y
+apt-get install libpam-mount -y
 
 # Install hxtools.
 apt-get install hxtools -y
