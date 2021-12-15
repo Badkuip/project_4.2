@@ -1,6 +1,7 @@
 #!/bin/bash
 
 touch /srv/sync_script.sh
+chmod +x /srv/sync_script.sh
 tee -a /srv/sync_script.sh <<EOF
 #!/bin/bash
 amount_of_home_folders=$(ls -l /home/ | grep ^d | wc -l)
