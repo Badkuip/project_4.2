@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apt-get install nfs-common -y
+
 touch /srv/sync_script.sh
 chmod +x /srv/sync_script.sh
 tee -a /srv/sync_script.sh <<EOF
