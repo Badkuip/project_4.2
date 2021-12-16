@@ -226,7 +226,7 @@ sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
 sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
 
 # send logs to syslog server
-echo "*.* @@10.15.1.18:514" >> /etc/rsyslog/rsyslog.conf
+echo "*.* @@10.15.1.18:514" >> /etc/rsyslog.conf
 systemctl restart rsyslog
 systemctl enable rsyslog
 
