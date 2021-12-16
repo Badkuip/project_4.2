@@ -215,15 +215,20 @@ apt-get install hxtools -y
 apt-get install nfs-common -y
 
 # Configure pam-mount to mount nfs homefolders.
-sed -i '16 s@^$@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/%(DOMAIN_USER)" mountpoint="home/%(DOMAIN_USER)" options="soft" />@g' /etc/security/pam_mount.conf.xml
+sed -i '16 s@^$@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/" mountpoint="home/" options="soft" />@g' /etc/security/pam_mount.conf.xml
 sed -i 's@<logout wait="0" hup="no" term="no" kill="no" />@<logout wait="0" hup="yes" term="yes" kill="yes" />@g' /etc/security/pam_mount.conf.xml
-sed -i 's@pam_mkhomedir.so@pam_mkhomedir.so\tumask=077@g' /etc/pam.d/common-session
+sed -i 's@pam_mkhomedir.so@pam_mkhomedir.so skel=/etc/skel umask=0077@g' /etc/pam.d/common-session
 # Permanent mount shared folder.
 echo '10.15.1.13:/srv/nfs-share /mnt/nfs-share nfs defaults 0 0'  >> /etc/fstab
 
 # Change home folder privalages.
 sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
 sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
+
+# send logs to syslog server
+echo "*.* @@10.15.1.18:514" >> /etc/rsyslog/rsyslog.conf
+systemctl restart rsyslog
+systemctl enable rsyslog
 
 
 # Install gconftool
