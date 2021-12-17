@@ -134,7 +134,6 @@ fi
 
 file='/usr/local/bin/7zz'
 if ! type $file &> /dev/null; then
-  echo 'test2'
   wget https://www.7-zip.org/a/7z2101-linux-x64.tar.xz && tar xf 7z2101-linux-x64.tar.xz
   tar xf 7z2101-linux-x64.tar.xz
   mv 7zz /usr/local/bin
