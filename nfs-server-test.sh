@@ -6,7 +6,9 @@ string=''
 substring=''
 
 # function that checks exitcode for services, to test if service is running
-check_exitcode () {
+check_service () {
+  systemctl is-active --quiet $service
+  exitcode=$(echo $?)
   if [ ! $exitcode = '0' ]; then
     tput setaf 1; echo "$service not running"
   fi
@@ -15,15 +17,11 @@ check_exitcode () {
 
 # checking if nfs-server is running
 service='nfs-server'
-systemctl is-active --quiet $service
-exitcode=$(echo $?)
-check_exitcode
+check_service
 
-# checking if nfs-server is running
+# checking if firewalld is running
 service='firewalld'
-systemctl is-active --quiet $service
-exitcode=$(echo $?)
-check_exitcode
+check_service
 
 
 
