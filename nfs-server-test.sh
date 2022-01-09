@@ -4,18 +4,19 @@ exitcode=''
 
 # function that checks exit code
 check_exitcode () {
- if [$exitcode = '1']; then
-  tput setaf 1; echo "$service not running"
+  if [$exitcode = '1']; then
+    tput setaf 1; echo "$service not running"
+  if
 }
 
 # check nfs is running
-pgrep -x nfs-server.service
+exitcode=$(systemctl is-active --quiet nfs-server.service | echo $?)
 $service='nfs-server.service'
-exitcode=$(echo $?) 
 check_exitcode
 
 # check nfs is running
-pgrep -x firewall-cmd.service
-$service='firewall-cmd.service'
-exitcode=$(echo $?) 
+exitcode=$(systemctl is-active --quiet firewalld | echo $?)
+$service='firewall-cmd'
 check_exitcode
+
+echo 'Test script has run.'
