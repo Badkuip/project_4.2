@@ -51,7 +51,7 @@ check_string
 substring="mountd"
 
 
-# function that checks fi program is installed
+# function that checks if folder exist
 check_folder() {
   if [ ! -d "$folder" ]; then
     tput setaf 1; echo "$folder does not exist." >&2
