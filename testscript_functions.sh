@@ -4,6 +4,7 @@ exitcode=''
 program=''
 string=''
 substring=''
+folder=''
 
 # function that checks exitcode for services, to test if service is running
 check_exitcode () {
@@ -21,7 +22,7 @@ check_exitcode
 
 
 
-# function that checks fi program is installed
+# function that checks if program is installed
 check_program () {
   if [ ! -x "$(command -v $program)" ]; then
     tput setaf 1; echo "$program is not installed." >&2
@@ -57,3 +58,17 @@ check_network () {
   tput setaf 7
 }
 check_network
+
+
+
+# function that checks if folder exists is installed
+check_folder() {
+  if [ ! -d "$folder" ]; then
+    tput setaf 1; echo "$folder does not exist." >&2
+  fi
+  tput setaf 7
+}
+
+# example check if folders exist
+folder='/srv/ldap-home'
+check_folder
