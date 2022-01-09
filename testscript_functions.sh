@@ -13,6 +13,14 @@ check_exitcode () {
   tput setaf 7
 }
 
+# example for checking if a service (nfs-server) is running
+service='nfs-server'
+systemctl is-active --quiet $service
+exitcode=$(echo $?)
+check_exitcode
+
+
+
 # function that checks fi program is installed
 check_program () {
   if [ ! -x "$(command -v $program)" ]; then
@@ -20,6 +28,12 @@ check_program () {
   fi
   tput setaf 7
 }
+
+# example for checking if program (firefox) is installed
+program='firefox'
+check_program
+
+
 
 # check if substring in string/text
 check_string () {
@@ -29,17 +43,17 @@ check_string () {
   tput setaf 7
 }
 
-# example for checking if a service (nfs-server) is running
-service='nfs-server'
-systemctl is-active --quiet $service
-exitcode=$(echo $?)
-check_exitcode
-
-# example for checking if program (firefox) is installed
-program='firefox'
-check_program
-
 # example for checking if a substring is in a string
 string=$(exportfs)
 substring="/srv/ldap-home	192.168.20.0/24"
 check_string
+
+
+
+# check network connection
+check_network () {
+  tput setaf 1 
+  ping -q -c1 8.8.8.8 &>/dev/null || echo 'The computer has no network connection'
+  tput setaf 7
+}
+check_network
