@@ -110,7 +110,7 @@ apt install thunderbird -y
 apt install libreoffice-gnome libreoffice -y
 
 # install libreoffice plasma
-apt install libreoffice-plasma libreoffice -y
+#apt install libreoffice-plasma libreoffice -y
 
 # install libreoffice other desktop
 apt install libreoffice -y
