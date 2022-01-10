@@ -142,7 +142,7 @@ fi
 # Set proxy.
 echo 'http_proxy="http://10.15.1.19:3128/"' >> /etc/environment
 echo 'https_proxy="http://10.15.1.19:3128/"' >> /etc/environment
-echo 'no_proxy="localhost,127.0.0.1,::1"' >> /etc/environment
+#echo 'no_proxy="localhost,127.0.0.1,::1"' >> /etc/environment
 
 # Set proxy apt-get.
 touch /etc/apt/apt.conf.d/proxy.conf
