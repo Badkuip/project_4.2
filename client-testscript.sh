@@ -69,8 +69,8 @@ substring='http_proxy="http://10.15.1.19:3128/"'
 check_string
 substring='https_proxy="http://10.15.1.19:3128/"'
 check_string
-substring='no_proxy="localhost,127.0.0.1,::1"'
-check_string
+# substring='no_proxy="localhost,127.0.0.1,::1"'
+# check_string
 string=$(cat /etc/apt/apt.conf.d/proxy.conf)
 substring='Acquire::http::Proxy "http://10.15.1.19:3128/";'
 check_string
