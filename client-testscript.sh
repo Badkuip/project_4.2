@@ -147,3 +147,7 @@ check_folder() {
 # check if nfs-share mount location exist
 folder='/mnt/nfs-share'
 check_folder
+
+# script end
+tput setaf 2; echo 'Test script has run successfully.'
+tput setaf 7
