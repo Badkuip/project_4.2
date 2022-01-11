@@ -35,9 +35,9 @@ check_string () {
 
 # checking if nsf folders are in exportfs
 string=$(exportfs)
-substring="/srv/ldap-home	10.15.1.0/24"
+substring="/srv/ldap-home	10.15.0.0/16"
 check_string
-substring="/srv/nfs-share	10.15.1.0/24"
+substring="/srv/nfs-share	10.15.0.0/16"
 
 # checking if firewall settings exists
 check_string
