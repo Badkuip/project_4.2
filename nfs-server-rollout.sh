@@ -25,8 +25,8 @@ chmod 777 ldap-home
 chmod 777 nfs-share
 
 # echo /srv/ldap-home 10.15.1.0/24(rwx, sync, soft)
-echo '/srv/ladp-home 10.15.1.0/24(rw,no_root_squash,no_subtree_check,no_wdelay,sync)' >> /etc/exports
-echo '/srv/nfs-share 10.15.1.0/24(rw,no_root_squash,no_subtree_check,no_wdelay,sync)' >> /etc/exports
+echo '/srv/ladp-home 10.15.0.0/16(rw,no_root_squash,no_subtree_check,no_wdelay,sync)' >> /etc/exports
+echo '/srv/nfs-share 10.15.0.0/16(rw,no_root_squash,no_subtree_check,no_wdelay,sync)' >> /etc/exports
 exportfs -arv
 firewall-cmd --permanent --add-service=nfs
 firewall-cmd --permanent --add-service=rpc-bind
