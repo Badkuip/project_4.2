@@ -159,7 +159,7 @@ apt install -y krb5-user sssd-krb5
 hostnamectl set-hostname $hostname_pc.uvi.nl
 
 # Login ad the DC, and add the client to the domain.
-echo "$password_admin" | realm join -v -U Administrator WIN-DC-1.uvi.nl
+echo "$password_admin" | realm join -v -U Administrator win-dc-1.uvi.nl
 
 # Make home directory for nieuw users.
 pam-auth-update --enable mkhomedir
