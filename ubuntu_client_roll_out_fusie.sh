@@ -186,9 +186,9 @@ sed -i 's@# disable-user-list=true@disable-user-list=true@g' /etc/gdm3/greeter.d
 sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
 sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
 # send logs to syslog server
-echo "*.* @@10.20.6.4:514" >> /etc/rsyslog.conf
-systemctl restart rsyslog
-systemctl enable rsyslog
+echo "*.* @10.20.6.4:514" >> /etc/syslog.conf
+systemctl restart syslog
+systemctl enable syslog
 # Install gconftool
 #apt install gconf2 -y
 # Remove update-manager
