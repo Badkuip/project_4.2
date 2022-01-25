@@ -187,8 +187,9 @@ sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
 sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
 # send logs to syslog server
 echo "*.* @10.20.6.4:514" >> /etc/syslog.conf
-systemctl restart syslog
-systemctl enable syslog
+/etc/rc.d/init.d/syslog restart
+#systemctl restart syslog
+#systemctl enable syslog
 # Install gconftool
 #apt install gconf2 -y
 # Remove update-manager
