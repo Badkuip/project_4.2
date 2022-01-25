@@ -60,7 +60,7 @@ ask_for_hostname () {
   read -p "Witch hostname would you use. The default hostname is $hostname_pc: " hostname_pc
 }
 ask_for_admin_password () {
-  read -p "Give the password of the Aministrator domain user: " password_admin
+  read -p "Give the password of the Administrator domain user: " password_admin
 }
 are_you_sure () {
   echo "Use a static ip-address: $static_ip_bool"
@@ -84,32 +84,36 @@ ask_to_use_static_ip
 ask_for_hostname
 ask_for_admin_password
 are_you_sure
+
 # fix the broken apt-get function
 sed -i -r 's@^deb http:\/\/[a-z]{0,3}.archive@deb http://old-releases@g' /etc/apt/sources.list
 sed -i -r 's@^deb http:\/\/security@deb http://old-releases@g' /etc/apt/sources.list
+
 # update en upgrade the client
 apt-get update -y
 apt-get upgrade -y
+
 # install vm tools
 apt-get install open-vm-tools -y
 apt-get install open-vm-tools-desktop -y
+
 # install thunderbird
 apt install thunderbird -y
+
 # install libreoffice genome
 apt install libreoffice-gnome libreoffice -y
-# install libreoffice plasma
-#apt install libreoffice-plasma libreoffice -y
 # install libreoffice other desktop
 apt install libreoffice -y
+
 # install firefox
 apt install firefox -y
+
 # install clamav
 apt-get install clamav clamav-daemon -y
 systemctl stop clamav-freshclam
 freshclam
 systemctl start clamav-freshclam
-# Install 7zip.
-#apt install p7zip-full -y
+
 # install 7zip without package manager
 if [ ! command -v wget > /dev/null 2>&1 ]; then
   exec apt-get install wget -y
@@ -120,10 +124,10 @@ if ! type $file &> /dev/null; then
   tar xf 7z2101-linux-x64.tar.xz
   mv 7zz /usr/local/bin
 fi
+
 # Set proxy.
 echo 'http_proxy="http://10.20.6.30:3128/"' >> /etc/environment
 echo 'https_proxy="http://10.20.6.30:3128/"' >> /etc/environment
-#echo 'no_proxy="localhost,127.0.0.1,::1"' >> /etc/environment
 # Set proxy apt-get.
 touch /etc/apt/apt.conf.d/proxy.conf
 echo 'Acquire::http::Proxy "http://10.20.6.30:3128/";' >> /etc/apt/apt.conf.d/proxy.conf
@@ -136,30 +140,29 @@ then
 else
   sed -e 's@nameserver ([0-9]{1,3}\.){3}[0-9]{1,3}@nameserver 10.20.6.2@' /etc/resolv.conf
 fi
-# Install tools to add client to domain.
+
+# update client before adding it to the domain
 apt update -y
-#apt -y install realmd libnss-sss libpam-sss sssd sssd-tools adcli samba-common-bin oddjob oddjob-mkhomedir packagekit -y 2>&1 | tee /var/log/install_log_domain-tools.xt
 
-
-
-
-# Install tools to add client to domain
+# Install tools to add client to domain.
 apt install -y sssd-ad sssd-tools realmd adcli
 
-# Make kerberos config file
-echo "[libdefaults]\n\tdefault_realm = uvi.nl\n\trdns = false" > /etc/krb5.conf
+# Make kerberos config file.
+echo "[libdefaults]" > /etc/krb5.conf
+echo "default_realm = uvi.nl" > /etc/krb5.conf
+echo "rdns = false" > /etc/krb5.conf
 
-# Install other tools to add client to domain
+# Install kerberos tools.
 apt install -y krb5-user sssd-krb5
 
-# Change hostname.
+# Change the hostname of the client.
 hostnamectl set-hostname $hostname_pc.uvi.nl
 
-# Login by the DC.
+# Login ad the DC, and add the client to the domain.
 echo "$password_admin" | realm join -v -U Administrator WIN-DC-1.uvi.nl
 
-# Search for domain.
-#realm discover g05-dc01.groep5.local
+# Make home directory for nieuw users.
+pam-auth-update --enable mkhomedir
 
 # Check if user wants static ip-address. If so, the static ip address wil be set.
 set_static_ip () {
@@ -176,45 +179,29 @@ set_static_ip () {
   fi
 }
 set_static_ip
+
 # Apply network changes.
 netplan apply
+
 # Set time sync.
 sed -i 's@#NTP=@NTP=lnx-ntp.uvi.nl@g' /etc/systemd/timesyncd.conf
 sed -i 's@#FallbackNTP=ntp.ubuntu.com@FallbackNTP=ntp.ubuntu.com@g' /etc/systemd/timesyncd.conf
-# Make home directory for nieuw users.
-#pam-auth-update --enable mkhomedir
+
+
 # Disables login list.
 sed -i 's@# disable-user-list=true@disable-user-list=true@g' /etc/gdm3/greeter.dconf-defaults
-# Makes shared folder mounting location.
-#mkdir /mnt/nfs-share
-# Install pam-mount.
-#apt-get install libpam-mount -y
-# Install hxtools.
-#apt-get install hxtools -y
-# Install nfs-common.
-#apt-get install nfs-common -y
-# Configure pam-mount to mount nfs homefolders.
-#sed -i '16 s@^$@<volume user="*" fstype="nfs" server="10.15.1.13" path="/srv/ldap-home/" mountpoint="home/" options="soft" />@g' /etc/security/pam_mount.conf.xml
-#sed -i 's@<logout wait="0" hup="no" term="no" kill="no" />@<logout wait="0" hup="yes" term="yes" kill="yes" />@g' /etc/security/pam_mount.conf.xml
-#sed -i 's@pam_mkhomedir.so@pam_mkhomedir.so skel=/etc/skel umask=0077@g' /etc/pam.d/common-session
-# Permanent mount shared folder.
-#echo '10.15.1.13:/srv/nfs-share /mnt/nfs-share nfs defaults 0 0'  >> /etc/fstab
+
 # Change home folder privalages.
 sed -i -r 's@^UMASK.*022$@UMASK\t\t077@g' /etc/login.defs
 sed -i -r 's@USERGROUPS_ENAB.*yes$@USERGROUPS_ENAB\tno@g' /etc/login.defs
+
 # send logs to syslog server
 echo "*.* @10.20.6.4:514" >> /etc/syslog.conf
 /etc/rc.d/init.d/syslog restart
-#systemctl restart syslog
-#systemctl enable syslog
-# Install gconftool
-#apt install gconf2 -y
-# Remove update-manager
+
+# Remove update manager.
 apt-get remove update-manager -y
-# Stop popup from updatemanager
-#gconftool -s --type bool /apps/update-notifier/auto_launch false
-# Add client to authentication server.
-#domainjoin-cli join domain_name domain_administrative_user
+
 # Restarts the computer.
 read -p 'The pc must be restarted to apply all changes, press enter to continue.' restart
 reboot
