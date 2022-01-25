@@ -128,8 +128,7 @@ echo 'https_proxy="http://10.20.6.30:3128/"' >> /etc/environment
 touch /etc/apt/apt.conf.d/proxy.conf
 echo 'Acquire::http::Proxy "http://10.20.6.30:3128/";' >> /etc/apt/apt.conf.d/proxy.conf
 echo 'Acquire::https::Proxy "http://10.20.6.30:3128/";' >> /etc/apt/apt.conf.d/proxy.conf
-# Change hostname.
-hostnamectl set-hostname $hostname_pc.uvi.nl
+
 # Set ip for domain controller.
 if grep - "nameserver ([0-9]{1,3}\.){3}[0-9]{1,3}" /etc/resolv.conf
 then
@@ -139,11 +138,29 @@ else
 fi
 # Install tools to add client to domain.
 apt update -y
-apt -y install realmd libnss-sss libpam-sss sssd sssd-tools adcli samba-common-bin oddjob oddjob-mkhomedir packagekit -y 2>&1 | tee /var/log/install_log_domain-tools.xt
-# Search for domain.
-#realm discover g05-dc01.groep5.local
+#apt -y install realmd libnss-sss libpam-sss sssd sssd-tools adcli samba-common-bin oddjob oddjob-mkhomedir packagekit -y 2>&1 | tee /var/log/install_log_domain-tools.xt
+
+
+
+
+# Install tools to add client to domain
+apt install -y sssd-ad sssd-tools realmd adcli
+
+# Make kerberos config file
+echo "[libdefaults]\n\tdefault_realm = uvi.nl\n\trdns = false" > /etc/krb5.conf
+
+# Install other tools to add client to domain
+apt install -y krb5-user sssd-krb5
+
+# Change hostname.
+hostnamectl set-hostname $hostname_pc.uvi.nl
+
 # Login by the DC.
 echo "$password_admin" | realm join -v -U Administrator WIN-DC-1.uvi.nl
+
+# Search for domain.
+#realm discover g05-dc01.groep5.local
+
 # Check if user wants static ip-address. If so, the static ip address wil be set.
 set_static_ip () {
   if [ "$static_ip_bool" = 'yes' ]; then
