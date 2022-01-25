@@ -149,8 +149,8 @@ apt install -y sssd-ad sssd-tools realmd adcli
 
 # Make kerberos config file.
 echo "[libdefaults]" > /etc/krb5.conf
-echo "default_realm = uvi.nl" > /etc/krb5.conf
-echo "rdns = false" > /etc/krb5.conf
+echo "default_realm = uvi.nl" >> /etc/krb5.conf
+echo "rdns = false" >> /etc/krb5.conf
 
 # Install kerberos tools.
 apt install -y krb5-user sssd-krb5
