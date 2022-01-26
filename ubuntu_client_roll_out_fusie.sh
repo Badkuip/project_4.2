@@ -145,24 +145,30 @@ fi
 apt update -y
 
 # Install tools to add client to domain.
-apt install -y sssd-ad sssd-tools realmd adcli
+apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit
 
 # Make kerberos config file.
 echo "[libdefaults]" > /etc/krb5.conf
 echo "default_realm = uvi.nl" >> /etc/krb5.conf
 echo "rdns = false" >> /etc/krb5.conf
 
-# Install kerberos tools.
-apt install -y krb5-user sssd-krb5
-
 # Change the hostname of the client.
 hostnamectl set-hostname $hostname_pc.uvi.nl
 
 # Login ad the DC, and add the client to the domain.
-echo "$password_admin" | realm join -v -U Administrator win-dc-1.uvi.nl
+echo "$password_admin" | realm join -v -U Administrator uvi.nl
+
+echo "session optional pam_mkhomedir.so skel=/etc/skel umask=077" >> /etc/pam.d/common-session
 
 # Make home directory for nieuw users.
 pam-auth-update --enable mkhomedir
+
+# Configure to not use fully qualified names
+sed -i 's@use_fully_qualified_names = True@use_fully_qualified_names = False@g' /etc/sssd/sssd.conf
+systemctl restart sssd
+
+# Restart de desktop manager
+dpkg-reconfigure gdm3
 
 # Check if user wants static ip-address. If so, the static ip address wil be set.
 set_static_ip () {
